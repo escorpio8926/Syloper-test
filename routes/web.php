@@ -14,7 +14,7 @@ use App\Http\Controllers\MailController;
 */
 
 Route::get('/', function () {
-    return view('auth\login');
+    return view('auth.login');
 });
 
 Auth::routes();
