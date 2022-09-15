@@ -8,7 +8,6 @@ use Image;
 use Illuminate\Support\Facades\DB;
 use App\Models\Category;
 use App\Models\User;
-use Illuminate\Support\Facades\Storage;
 
 
 class PostController extends Controller
@@ -44,9 +43,8 @@ class PostController extends Controller
         ]);
 
         $path = $request->file('imagen')->getClientOriginalName();; //->store('public/uploads');
-        $img = Image::make($request->file('imagen'))->resize(100,100); 
- 
-        Storage::disk('public')->put( $path, $img);
+        $img = Image::make($request->file('imagen')); 
+        $img->resize(100,100)->save(public_path().'/Uploads/'.$path);  
 
         $post = new Post();
         $post ->titulo = $request->input('titulo');
