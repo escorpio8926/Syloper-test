@@ -44,7 +44,7 @@ class PostController extends Controller
 
         $path = $request->file('imagen')->getClientOriginalName();; //->store('public/uploads');
         $img = Image::make($request->file('imagen')); 
-        $img->resize(100,100)->save(public_path().'/Uploads/'.$path);  
+        $img->resize(100,100)->save('Uploads/'.$path);  
 
         $post = new Post();
         $post ->titulo = $request->input('titulo');
