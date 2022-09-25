@@ -7,11 +7,33 @@
         <h1 style="color: darkslategrey ;font-size: revert"><em>ALTA DE POST</em></h1>
         <br>
         <label for="select"><b>Categoria:</b></label><br>
-        <select class="js-example-basic-single" name="categories_id" id="select" required>
-        @foreach($categorys as $category)
-        <option value='{{ $category->id }}'>{{ $category->descripcion }}</option>
-        @endforeach
-        </select>
+             <div class="box-body">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>Categoria</th>
+                            <th>Categoria Padre</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @if(isset($categorys))
+                            <?php $_SESSION['i'] = 0; ?>
+                            @foreach($categorys as $category)
+                                <tr>
+                                    <?php $dash=''; ?>
+                                    <td><strong>{{$category->descripcion}}</strong></td>
+                                    <td>
+
+                                    </td>
+                                 </tr>
+                                 @if(count($category->subcategory))
+                                     @include('sub-category-list',['subcategories' => $category->subcategory])
+                                 @endif
+                            @endforeach
+                        @endif
+                        </tbody>
+                    </table>
+                </div>                     
         <br>
         <label style="color:red"><b>(Las categorias se deben dar de alta por medio de la API)</b></label>
         <br>
@@ -32,6 +54,8 @@
 
     </form>
 </div>
+
+
 
 @endsection
 

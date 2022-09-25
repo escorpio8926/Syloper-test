@@ -19,7 +19,7 @@ class PostController extends Controller
      */
     public function index($id) 
     {   
-    $posts =  Post::select('posts.*','categories.descripcion as categoria')->join('categories', 'categories.id', '=', 'posts.categories_id')->where('user_id', $id)->paginate(5);
+    $posts =  Post::select('posts.*','categories.descripcion as categoria')->join('categories', 'categories.id', '=', 'posts.categories_id')->where('user_id', $id)->orderBy('posts.id', 'asc')->paginate(5);
     return view('indice',compact('posts'));
     }
 
@@ -42,18 +42,18 @@ class PostController extends Controller
             'imagen' => 'required|image|mimes:jpeg,jpg|max:2048',
         ]);
 
-        $path = $request->file('imagen')->getClientOriginalName();; //->store('public/uploads');
+        $path = $request->file('imagen')->getClientOriginalName(); //->store('public/uploads');
         $img = Image::make($request->file('imagen')); 
-        $img->resize(100,100)->save(public_path().'/Uploads/'.$path);
+        $img->resize(100,100)->save($path);  
 
         $post = new Post();
         $post ->titulo = $request->input('titulo');
         $post ->descripcion = $request->input('descripcion');
         $post ->user_id = $request->input('user_id');
-        $post ->imagen ='Uploads/'.$path;
+        $post ->imagen =$path;
         $post ->slug =str_replace(" ", "-", $request->input('titulo'));
         $post ->categories_id = $request->input('categories_id');
-        
+    
         $post ->save();
        /*
         if (Request::wantsJson()) {
@@ -62,8 +62,9 @@ class PostController extends Controller
             // return HTML response
         }
         */
-        $categorys =  Category::all();
+        $categorys = Category::where('parent_id', null)->orderby('descripcion', 'asc')->get();
         return view('home',compact('categorys'));
+   
     }
 
     /**
@@ -75,7 +76,7 @@ class PostController extends Controller
     public function show(Post $post, $slug)
     {
         $post = Post::select('posts.*','categories.descripcion as categoria')->join('categories', 'categories.id', '=', 'posts.categories_id')->where('slug','=', $slug)->firstOrFail();
-        $categorys =  Category::where('descripcion', '!=', $post->categoria)->get();
+        $categorys = Category::where('parent_id', null)->orderby('descripcion', 'asc')->get();
         return view('post',compact('post','categorys'));
     }
 
@@ -103,8 +104,8 @@ class PostController extends Controller
         ]);
         $path = $request->file('imagen')->getClientOriginalName();; //->store('public/uploads');
         $img = Image::make($request->file('imagen')); 
-        $img->resize(100,100)->save(public_path().'/Uploads/'.$path);
-        $post ->imagen ='Uploads/'.$path;
+        $img->resize(100,100)->save($path);
+        $post ->imagen =$path;
         }
 
         $post ->titulo = $request->input('titulo');
@@ -113,9 +114,8 @@ class PostController extends Controller
         $post ->slug =str_replace(" ", "-", $request->input('titulo'));
         $post ->categories_id = $request->input('categories_id');
         $post ->save();
-
-        $posts =  Post::select('posts.*','categories.descripcion as categoria')->join('categories', 'categories.id', '=', 'posts.categories_id')->where('user_id', $id)->paginate(5);
-        return view('indice',compact('posts'));
+        
+        return redirect('/indice/'.$post ->user_id);
     }
 
     /**
@@ -129,8 +129,7 @@ class PostController extends Controller
         $post= Post::find($id);
         $post->delete();
 
-        $posts =  Post::where('user_id', $user_id)->paginate(5);
-        return view('indice',compact('posts'));
+        return redirect('/indice/'.$post ->user_id);
     }
 
     //RUTA DE LA API
@@ -162,15 +161,15 @@ class PostController extends Controller
             'categories_id' => 'required|min:1|max:100',
         ]);
 
-        $path = $request->file('imagen')->getClientOriginalName();; //->store('public/uploads');
+        $path = $request->file('imagen')->getClientOriginalName(); //->store('public/uploads');
         $img = Image::make($request->file('imagen')); 
-        $img->resize(100,100)->save(public_path().'/Uploads/'.$path);  
+        $img->resize(100,100)->save($path);  
 
         $post = new Post();
         $post ->titulo = $request->input('titulo');
         $post ->descripcion = $request->input('descripcion');
         $post ->user_id = $request->input('user_id');
-        $post ->imagen ='Uploads/'.$path;
+        $post ->imagen =$path;
         $post ->slug =str_replace(" ", "-", $request->input('titulo'));
         $post ->categories_id = $request->input('categories_id');
         
@@ -234,8 +233,8 @@ class PostController extends Controller
         ]);
         $path = $request->file('imagen')->getClientOriginalName();; //->store('public/uploads');
         $img = Image::make($request->file('imagen')); 
-        $img->resize(100,100)->save(public_path().'/Uploads/'.$path);
-        $post ->imagen ='Uploads/'.$path;
+        $img->resize(100,100)->save($path);
+        $post ->imagen =$path;
         }
 
 
@@ -292,7 +291,7 @@ class PostController extends Controller
     { 
     $posts =  Post::all();  
     return response ()->json([
-        'Listado de Posts' =>$post
+        'Listado de Posts' =>$posts
     ],201);
     }
 }

@@ -18,10 +18,19 @@
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
     <!-- Scripts -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <script>
+    $(document).ready(function(){
+        $('.check').click(function() {
+            $('.check').not(this).prop('checked', false);
+            $(".check").removeAttr('required');
+        });
+    });
+    </script>
     
      <!-- Bootstrap CSS -->
      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+     <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
      <style>
 .padre {
       display: flex;
@@ -99,11 +108,7 @@
         </main>
     </div>
 </body>
-<script type="text/javascript">
-$(document).ready(function() {
-    $('#select').select2();
-});
-</script>
+
 </html>
 
 

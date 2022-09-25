@@ -24,7 +24,8 @@ class HomeController extends Controller
      */
     public function index()
     {    
-        $categorys =  Category::all();
+        //$categorys =  Category::get();
+        $categorys = Category::where('parent_id', null)->orderby('descripcion', 'asc')->get();
         return view('home',compact('categorys'));
 
     }

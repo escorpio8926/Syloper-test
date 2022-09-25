@@ -33,6 +33,7 @@ class CategoryController extends Controller
         ]);
         $category = new Category();
         $category ->descripcion = $request->input('descripcion');
+        $category ->parent_id = $request->input('parent_id');
         $category ->save();
 
         return response ()->json([
@@ -59,9 +60,9 @@ class CategoryController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,Category $category)
+    public function update(Request $request, Category $category )
     {
-        try {
+        try { 
             $category= Category::findorfail($request->id);
             } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
                 return response([

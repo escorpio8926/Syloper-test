@@ -4,16 +4,36 @@
 <div class="contanier my-5 padre" >
     <form id="formulario" action="/upost/{{ $post->user_id }}" method="post" enctype="multipart/form-data">
     @csrf
-        <h1 style="color: darkslategrey"><em>MODIFICAR POST</em></h1>
+        <h1 style="color: darkslategrey ;font-size: revert"><em>MODIFICAR POST</em></h1>
         <br>
         <label for="select"><b>Categoria:</b></label><br>
-        <select class="js-example-basic-single" name="categories_id" id="select" required>
-        <option value='{{ $post->categories_id }}'>{{ $post->categoria }}</option>
-        @foreach($categorys as $category)
-        <option value='{{ $category->id }}'>{{ $category->descripcion }}</option>
-        @endforeach
-        </select>
-        <br>
+        <div class="box-body">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th><b>Categoria</b></th>
+                            <th>Categoria Padre</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @if(isset($categorys))
+                            <?php $_SESSION['i'] = 0; ?>
+                            @foreach($categorys as $category)
+                                <tr>
+                                    <?php $dash=''; ?>
+                                    <td><strong>{{$category->descripcion}}</strong></td>
+                                    <td>
+
+                                    </td>
+                                 </tr>
+                                 @if(count($category->subcategory))
+                                     @include('sub-category-list',['subcategories' => $category->subcategory])
+                                 @endif
+                            @endforeach
+                        @endif
+                        </tbody>
+                    </table>
+                </div>      
         <label style="color:red"><b>(Las categorias se deben dar de alta por medio de la API)</b></label>
         <br>
         <br>

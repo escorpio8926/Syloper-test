@@ -25,7 +25,7 @@ Route :: post('login',[AuthController::class,'login']);
 //Rutas categorias
 Route::post('/categorias', [App\Http\Controllers\CategoryController::class, 'index']);
 
-//Ruta Post
+//Ruta get
 Route::get('/allpost', [App\Http\Controllers\PostController::class, 'all']);
 
 // Rutas Proteguidas
